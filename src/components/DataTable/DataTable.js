@@ -1,70 +1,130 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import classNames from 'classnames';
+import cx from 'classnames';
 import Button from '../Button';
 import Icon from '../Icon';
 import Search from '../Search';
+import { sortRow, toggleSortDirection } from './tools/sorting';
+import wrapComponent from '../../tools/wrapComponent';
 
-const toggleSortDirection = direction => {
-  if (direction === 'DESC') {
-    return 'ASC';
-  }
+export const Container = wrapComponent({
+  name: 'Container',
+  className: ['bx--data-table-v2-container'],
+  type: 'div',
+});
 
-  return 'DESC';
+export const Table = wrapComponent({
+  name: 'Table',
+  className: ['bx--data-table-v2', 'bx--data-table-v2--zebra'],
+  type: 'table',
+});
+
+export const TableHead = wrapComponent({
+  name: 'TableHead',
+  type: 'thead',
+});
+
+export const TableRow = wrapComponent({
+  name: 'TableRow',
+  type: 'tr',
+});
+
+export const TableBody = wrapComponent({
+  name: 'TableBody',
+  type: 'tbody',
+});
+
+export const TableCell = wrapComponent({
+  name: 'TableCell',
+  type: 'td',
+});
+
+export const TableHeader = ({
+  children,
+  onClick,
+  onKeyDown,
+  isSortHeader,
+  sortDirection,
+  ...rest
+}) => {
+  const className = cx({
+    'bx--table-sort-v2': true,
+    'bx--table-sort-v2--active': isSortHeader,
+    'bx--table-sort-v2--ascending': isSortHeader && sortDirection === 'ASC',
+  });
+  return (
+    <th>
+      <button
+        className={className}
+        onClick={onClick}
+        onKeyDown={onKeyDown}
+        {...rest}>
+        <span className="bx--table-header-label">{children}</span>
+        <Icon
+          className="bx--table-sort-v2__icon"
+          name="caret--down"
+          description="Sort arrow"
+        />
+      </button>
+    </th>
+  );
 };
 
-const sortRow = (key, direction) => (a, b) => {
-  if (direction === 'DESC') {
-    return a[key].localeCompare(b[key]);
-  }
+// TODO: pre-sorted by column
+export default class DataTable extends React.Component {
+  static propTypes = {
+    row: PropTypes.array.isRequired,
+    headers: PropTypes.shape({
+      key: PropTypes.string.isRequired,
+      header: PropTypes.string.isRequired,
+    }).isRequired,
+  };
 
-  return b[key].localeCompare(a[key]);
-};
-
-export class DataTable extends Component {
   constructor(props) {
     super(props);
+    // TODO: sort rows by active header
     this.state = {
-      rows: props.initialRows,
-      sortKey: null,
+      rows: props.rows.slice(),
       sortDirection: null,
-    };
-    this.sortBy = this.sortBy.bind(this);
-    this.getHeaderProps = this.getHeaderProps.bind(this);
-  }
-
-  sortBy(key) {
-    return () => {
-      const direction =
-        this.state.sortKey === key
-          ? toggleSortDirection(this.state.sortDirection)
-          : 'DESC';
-
-      this.setState(state => {
-        return {
-          rows: state.rows.sort(sortRow(key, direction)),
-          sortKey: key,
-          sortDirection: direction,
-        };
-      });
+      sortHeader: null,
     };
   }
 
-  getHeaderProps(header) {
-    return {
-      onClick: this.sortBy(header.key),
-      onKeyDown: () => {},
-    };
+  componentWillReceiveProps(nextProps) {
+    // TODO: sync incoming rows/headers with state
   }
+
+  sortBy = header => () =>
+    this.setState(state => {
+      const { key } = this.props.headers.find(h => h.header === header);
+      const sortDirection = toggleSortDirection(state.sortDirection);
+      const rows = state.rows.sort(sortRow(key, sortDirection, 'en'));
+
+      return {
+        rows,
+        sortDirection,
+        sortHeader: header,
+      };
+    });
+
+  getHeaderProps = ({ header }) => ({
+    isSortHeader: header === this.state.sortHeader,
+    key: header,
+    onClick: this.sortBy(header),
+    onKeyDown: event => {
+      if (event.keyCode === 32 || event.keyCode === 13) {
+        this.sortBy(header);
+      }
+    },
+    sortDirection: this.state.sortDirection,
+  });
 
   render() {
-    const { render, children, headers } = this.props;
-    const { rows } = this.state;
-
+    const { children, render } = this.props;
     const renderProps = {
-      rows,
-      headers,
-      sortBy: this.sortBy,
+      rows: this.state.rows,
+      headers: this.props.headers.map(({ header }) => header),
+
       getHeaderProps: this.getHeaderProps,
     };
 
@@ -80,325 +140,385 @@ export class DataTable extends Component {
   }
 }
 
-export class DataTableColumnHeader extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      sorted: false,
-      active: false,
-    };
-  }
+// const toggleSortDirection = direction => {
+// if (direction === 'DESC') {
+// return 'ASC';
+// }
 
-  setActive = () => {
-    this.setState({
-      active: true,
-    });
-  };
+// return 'DESC';
+// };
 
-  removeActive = () => {
-    this.setState({
-      active: false,
-    });
-  };
+// const sortRow = (key, direction) => (a, b) => {
+// if (direction === 'DESC') {
+// return a[key].localeCompare(b[key]);
+// }
 
-  handleClick = () => {
-    this.setState(state => ({
-      sorted: !state.sorted,
-    }));
-  };
+// return b[key].localeCompare(a[key]);
+// };
 
-  render() {
-    const { children, className, sortable, ...other } = this.props;
-    const tableSortClasses = classNames('bx--table-sort-v2', {
-      'bx--table-sort-v2--active': this.state.active,
-      'bx--table-sort-v2--ascending': this.state.sorted,
-    });
-    return (
-      <th {...other} className={className}>
-        {sortable ? (
-          <button
-            onFocus={this.setActive}
-            onClick={this.handleClick}
-            className={tableSortClasses}>
-            {children}
-            <Icon
-              className="bx--table-sort-v2__icon"
-              name="caret--down"
-              description="Sort arrow"
-            />
-          </button>
-        ) : (
-          children
-        )}
-      </th>
-    );
-  }
-}
+// export class DataTable extends Component {
+// constructor(props) {
+// super(props);
+// this.state = {
+// rows: props.initialRows,
+// sortKey: null,
+// sortDirection: null,
+// };
+// this.sortBy = this.sortBy.bind(this);
+// this.getHeaderProps = this.getHeaderProps.bind(this);
+// }
 
-DataTableColumnHeader.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-  sortable: PropTypes.bool,
-  onClick: PropTypes.func,
-};
+// sortBy(key) {
+// return () => {
+// const direction =
+// this.state.sortKey === key
+// ? toggleSortDirection(this.state.sortDirection)
+// : 'DESC';
 
-export const DataTableHead = ({ ...props }) => {
-  const { children, className, ...other } = props;
+// this.setState(state => {
+// return {
+// rows: state.rows.sort(sortRow(key, direction)),
+// sortKey: key,
+// sortDirection: direction,
+// };
+// });
+// };
+// }
 
-  return (
-    <thead {...other} className={className}>
-      {children}
-    </thead>
-  );
-};
+// getHeaderProps(header) {
+// return {
+// onClick: this.sortBy(header.key),
+// onKeyDown: () => {},
+// };
+// }
 
-DataTableHead.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-};
+// render() {
+// const { render, children, headers } = this.props;
+// const { rows } = this.state;
 
-export const DataTableBody = ({ ...props }) => {
-  const { className, children, ...other } = props;
+// const renderProps = {
+// rows,
+// headers,
+// sortBy: this.sortBy,
+// getHeaderProps: this.getHeaderProps,
+// };
 
-  return (
-    <tbody {...other} className={className}>
-      {children}
-    </tbody>
-  );
-};
+// if (render !== undefined) {
+// return render(renderProps);
+// }
 
-DataTableBody.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-};
+// if (children !== undefined) {
+// return children(renderProps);
+// }
 
-export const DataTableToolbarContent = ({ ...props }) => {
-  const { className, children, ...other } = props;
+// return null;
+// }
+// }
 
-  const toolbarContentClasses = classNames(className, 'bx--toolbar-content');
+// export class DataTableColumnHeader extends Component {
+// constructor(props) {
+// super(props);
+// this.state = {
+// sorted: false,
+// active: false,
+// };
+// }
 
-  return (
-    <div className={toolbarContentClasses} {...other}>
-      {children}
-    </div>
-  );
-};
+// setActive = () => {
+// this.setState({
+// active: true,
+// });
+// };
 
-DataTableToolbarContent.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-};
+// removeActive = () => {
+// this.setState({
+// active: false,
+// });
+// };
 
-export const DataTableToolbarAction = ({ ...props }) => {
-  const { className, iconName, iconDescription, ...other } = props;
+// handleClick = () => {
+// this.setState(state => ({
+// sorted: !state.sorted,
+// }));
+// };
 
-  const toolbarActionClasses = classNames(className, 'bx--toolbar-action');
+// render() {
+// const { children, className, sortable, ...other } = this.props;
+// const tableSortClasses = classNames('bx--table-sort-v2', {
+// 'bx--table-sort-v2--active': this.state.active,
+// 'bx--table-sort-v2--ascending': this.state.sorted,
+// });
+// return (
+// <th {...other} className={className}>
+// {sortable ? (
+// <button
+// onFocus={this.setActive}
+// onClick={this.handleClick}
+// className={tableSortClasses}>
+// {children}
+// <Icon
+// className="bx--table-sort-v2__icon"
+// name="caret--down"
+// description="Sort arrow"
+// />
+// </button>
+// ) : (
+// children
+// )}
+// </th>
+// );
+// }
+// }
 
-  return (
-    <button className={toolbarActionClasses} {...other}>
-      <Icon
-        className="bx--toolbar-action__icon"
-        name={iconName}
-        description={iconDescription}
-      />
-    </button>
-  );
-};
+// DataTableColumnHeader.propTypes = {
+// children: PropTypes.node,
+// className: PropTypes.string,
+// sortable: PropTypes.bool,
+// onClick: PropTypes.func,
+// };
 
-DataTableToolbarAction.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-  iconName: PropTypes.string,
-  iconDescription: PropTypes.string,
-};
+// export const DataTableBody = ({ ...props }) => {
+// const { className, children, ...other } = props;
 
-export const DataTableToolbar = ({ ...props }) => {
-  const { className, children, ...other } = props;
+// return (
+// <tbody {...other} className={className}>
+// {children}
+// </tbody>
+// );
+// };
 
-  const toolbarClasses = classNames(className, 'bx--table-toolbar');
+// DataTableBody.propTypes = {
+// children: PropTypes.node,
+// className: PropTypes.string,
+// };
 
-  return (
-    <section className={toolbarClasses} {...other}>
-      {children}
-    </section>
-  );
-};
+// export const DataTableToolbarContent = ({ ...props }) => {
+// const { className, children, ...other } = props;
 
-DataTableToolbar.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-};
+// const toolbarContentClasses = classNames(className, 'bx--toolbar-content');
 
-export const DataTableActionList = ({ ...props }) => {
-  const { className, children, ...other } = props;
+// return (
+// <div className={toolbarContentClasses} {...other}>
+// {children}
+// </div>
+// );
+// };
 
-  const actionListClasses = classNames(className, 'bx--action-list');
+// DataTableToolbarContent.propTypes = {
+// children: PropTypes.node,
+// className: PropTypes.string,
+// };
 
-  return (
-    <div className={actionListClasses} {...other}>
-      {children}
-    </div>
-  );
-};
+// export const DataTableToolbarAction = ({ ...props }) => {
+// const { className, iconName, iconDescription, ...other } = props;
 
-DataTableActionList.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-};
+// const toolbarActionClasses = classNames(className, 'bx--toolbar-action');
 
-export const DataTableBatchAction = ({ ...props }) => {
-  const { className, children, ...other } = props;
+// return (
+// <button className={toolbarActionClasses} {...other}>
+// <Icon
+// className="bx--toolbar-action__icon"
+// name={iconName}
+// description={iconDescription}
+// />
+// </button>
+// );
+// };
 
-  return (
-    <Button
-      small
-      kind="ghost"
-      className={className}
-      icon="add--glyph"
-      iconDescription="Add"
-      {...other}>
-      {children}
-    </Button>
-  );
-};
+// DataTableToolbarAction.propTypes = {
+// children: PropTypes.node,
+// className: PropTypes.string,
+// iconName: PropTypes.string,
+// iconDescription: PropTypes.string,
+// };
 
-DataTableBatchAction.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-};
+// export const DataTableToolbar = ({ ...props }) => {
+// const { className, children, ...other } = props;
 
-export const DataTableBatchActions = ({ ...props }) => {
-  const {
-    className,
-    children,
-    showBatchActions,
-    totalSelected,
-    handleClick,
-    ...other
-  } = props;
+// const toolbarClasses = classNames(className, 'bx--table-toolbar');
 
-  const batchActionsClasses = classNames(
-    {
-      'bx--batch-actions': true,
-      'bx--batch-actions--active': showBatchActions,
-    },
-    className
-  );
+// return (
+// <section className={toolbarClasses} {...other}>
+// {children}
+// </section>
+// );
+// };
 
-  return (
-    <div className={batchActionsClasses} {...other}>
-      {children}
-      <div className="bx--batch-summary">
-        <p className="bx--batch-summary__para">
-          <span>{totalSelected}</span>{' '}
-          {totalSelected > 1 ? 'items selected' : 'item selected'}
-        </p>
-        <button className="bx--batch-summary__cancel" onClick={handleClick}>
-          Cancel
-        </button>
-      </div>
-    </div>
-  );
-};
+// DataTableToolbar.propTypes = {
+// children: PropTypes.node,
+// className: PropTypes.string,
+// };
 
-DataTableBatchAction.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-  showBatchActions: PropTypes.bool,
-  totalSelected: PropTypes.number,
-  handleClick: PropTypes.func,
-};
+// export const DataTableActionList = ({ ...props }) => {
+// const { className, children, ...other } = props;
 
-export class DataTableContainer extends Component {
-  render() {
-    const tableContainerClasses = classNames(
-      className,
-      'bx--data-table-v2-container'
-    );
-    const { children, className, title, ...other } = this.props;
-    return (
-      <div className={tableContainerClasses} {...other}>
-        <h4 className="bx--data-table-v2-header">{title}</h4>
-        {children}
-      </div>
-    );
-  }
-}
+// const actionListClasses = classNames(className, 'bx--action-list');
 
-DataTableContainer.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-  containerClassName: PropTypes.string,
-  title: PropTypes.string,
-};
+// return (
+// <div className={actionListClasses} {...other}>
+// {children}
+// </div>
+// );
+// };
 
-export const DataTableSearch = props => {
-  const { className, searchContainerClass, onChange, ...other } = props;
+// DataTableActionList.propTypes = {
+// children: PropTypes.node,
+// className: PropTypes.string,
+// };
 
-  const searchContainerClasses = classNames(
-    searchContainerClass,
-    'bx--toolbar-search-container'
-  );
+// export const DataTableBatchAction = ({ ...props }) => {
+// const { className, children, ...other } = props;
 
-  return (
-    <div className={searchContainerClasses}>
-      <Search
-        className={className}
-        {...other}
-        small
-        id="search-2"
-        labelText="Filter table"
-        placeHolderText="Search"
-        onChange={onChange}
-      />
-    </div>
-  );
-};
+// return (
+// <Button
+// small
+// kind="ghost"
+// className={className}
+// icon="add--glyph"
+// iconDescription="Add"
+// {...other}>
+// {children}
+// </Button>
+// );
+// };
 
-DataTableSearch.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-  searchContainerClasses: PropTypes.string,
-};
+// DataTableBatchAction.propTypes = {
+// children: PropTypes.node,
+// className: PropTypes.string,
+// };
 
-export const DataTableSelectAll = props => {
-  const { className, onClick, checked, ...other } = props;
+// export const DataTableBatchActions = ({ ...props }) => {
+// const {
+// className,
+// children,
+// showBatchActions,
+// totalSelected,
+// handleClick,
+// ...other
+// } = props;
 
-  const handleClick = () => {
-    onClick();
-  };
+// const batchActionsClasses = classNames(
+// {
+// 'bx--batch-actions': true,
+// 'bx--batch-actions--active': showBatchActions,
+// },
+// className
+// );
 
-  return (
-    <th>
-      <input
-        checked={checked}
-        onClick={handleClick}
-        type="checkbox"
-        className={classNames(className, 'bx--checkbox')}
-        {...other}
-        value="green"
-        name="checkbox-20"
-        id="bx--checkbox-20"
-      />
-      <label htmlFor="bx--checkbox-20" className="bx--checkbox-label">
-        <span className="bx--checkbox-appearance">
-          <svg
-            className="bx--checkbox-checkmark"
-            width="12"
-            height="9"
-            viewBox="0 0 12 9"
-            fillRule="evenodd">
-            <path d="M4.1 6.1L1.4 3.4 0 4.9 4.1 9l7.6-7.6L10.3 0z" />
-          </svg>
-        </span>
-      </label>
-    </th>
-  );
-};
+// return (
+// <div className={batchActionsClasses} {...other}>
+// {children}
+// <div className="bx--batch-summary">
+// <p className="bx--batch-summary__para">
+// <span>{totalSelected}</span>{' '}
+// {totalSelected > 1 ? 'items selected' : 'item selected'}
+// </p>
+// <button className="bx--batch-summary__cancel" onClick={handleClick}>
+// Cancel
+// </button>
+// </div>
+// </div>
+// );
+// };
 
-DataTableSelectAll.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-  onClick: PropTypes.func,
-  checked: PropTypes.bool,
-};
+// DataTableBatchAction.propTypes = {
+// children: PropTypes.node,
+// className: PropTypes.string,
+// showBatchActions: PropTypes.bool,
+// totalSelected: PropTypes.number,
+// handleClick: PropTypes.func,
+// };
+
+// export class DataTableContainer extends Component {
+// render() {
+// const tableContainerClasses = classNames(
+// className,
+// 'bx--data-table-v2-container'
+// );
+// const { children, className, title, ...other } = this.props;
+// return (
+// <div className={tableContainerClasses} {...other}>
+// <h4 className="bx--data-table-v2-header">{title}</h4>
+// {children}
+// </div>
+// );
+// }
+// }
+
+// DataTableContainer.propTypes = {
+// children: PropTypes.node,
+// className: PropTypes.string,
+// containerClassName: PropTypes.string,
+// title: PropTypes.string,
+// };
+
+// export const DataTableSearch = props => {
+// const { className, searchContainerClass, onChange, ...other } = props;
+
+// const searchContainerClasses = classNames(
+// searchContainerClass,
+// 'bx--toolbar-search-container'
+// );
+
+// return (
+// <div className={searchContainerClasses}>
+// <Search
+// className={className}
+// {...other}
+// small
+// id="search-2"
+// labelText="Filter table"
+// placeHolderText="Search"
+// onChange={onChange}
+// />
+// </div>
+// );
+// };
+
+// DataTableSearch.propTypes = {
+// children: PropTypes.node,
+// className: PropTypes.string,
+// searchContainerClasses: PropTypes.string,
+// };
+
+// export const DataTableSelectAll = props => {
+// const { className, onClick, checked, ...other } = props;
+
+// const handleClick = () => {
+// onClick();
+// };
+
+// return (
+// <th>
+// <input
+// checked={checked}
+// onClick={handleClick}
+// type="checkbox"
+// className={classNames(className, 'bx--checkbox')}
+// {...other}
+// value="green"
+// name="checkbox-20"
+// id="bx--checkbox-20"
+// />
+// <label htmlFor="bx--checkbox-20" className="bx--checkbox-label">
+// <span className="bx--checkbox-appearance">
+// <svg
+// className="bx--checkbox-checkmark"
+// width="12"
+// height="9"
+// viewBox="0 0 12 9"
+// fillRule="evenodd">
+// <path d="M4.1 6.1L1.4 3.4 0 4.9 4.1 9l7.6-7.6L10.3 0z" />
+// </svg>
+// </span>
+// </label>
+// </th>
+// );
+// };
+
+// DataTableSelectAll.propTypes = {
+// children: PropTypes.node,
+// className: PropTypes.string,
+// onClick: PropTypes.func,
+// checked: PropTypes.bool,
+// };

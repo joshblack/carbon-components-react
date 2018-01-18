@@ -1254,20 +1254,21 @@ capture-stack-trace@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/capture-stack-trace/-/capture-stack-trace-1.0.0.tgz#4a6fa07399c26bba47f0b2496b4d0fb408c5550d"
 
-carbon-components-react@^4.0.4:
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/carbon-components-react/-/carbon-components-react-4.0.4.tgz#9d3378193092b8c0817cf49fb32682b2602c1a27"
+carbon-components-react@5.x:
+  version "5.9.1"
+  resolved "https://registry.yarnpkg.com/carbon-components-react/-/carbon-components-react-5.9.1.tgz#345a887597564d3549d6df3a724057c9e037933b"
   dependencies:
     classnames "2.2.5"
-    flatpickr "3.0.7"
+    downshift "^1.23.2"
+    flatpickr "4.2.2"
     lodash.debounce "^4.0.8"
-    react-addons-css-transition-group "^15.4.2"
+    lodash.isequal "^4.5.0"
     warning "3.0.0"
     window-or-global "^1.0.1"
 
-carbon-components@^8.0.8:
-  version "8.0.8"
-  resolved "https://registry.yarnpkg.com/carbon-components/-/carbon-components-8.0.8.tgz#9531bd15b331dd43919254c0344e685c478cd862"
+carbon-components@8.x:
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/carbon-components/-/carbon-components-8.6.0.tgz#736027d0b4cd51183d525405bef441109d1720e9"
   dependencies:
     carbon-icons "^6.0.4"
     flatpickr "2.6.3"
@@ -1292,10 +1293,6 @@ center-align@^0.1.1:
   dependencies:
     align-text "^0.1.3"
     lazy-cache "^1.0.3"
-
-chain-function@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/chain-function/-/chain-function-1.0.0.tgz#0d4ab37e7e18ead0bdc47b920764118ce58733dc"
 
 chalk@1.1.3, chalk@^1.0.0, chalk@^1.1.1, chalk@^1.1.3:
   version "1.1.3"
@@ -1947,10 +1944,6 @@ dom-converter@~0.1:
   dependencies:
     utila "~0.3"
 
-dom-helpers@^3.2.0:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/dom-helpers/-/dom-helpers-3.2.1.tgz#3203e07fed217bd1f424b019735582fc37b2825a"
-
 dom-serializer@0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/dom-serializer/-/dom-serializer-0.1.0.tgz#073c697546ce0780ce23be4a28e293e40bc30c82"
@@ -2004,6 +1997,10 @@ dot-prop@^3.0.0:
 dotenv@4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-4.0.0.tgz#864ef1379aced55ce6f95debecdce179f7a0cd1d"
+
+downshift@^1.23.2:
+  version "1.25.0"
+  resolved "https://registry.yarnpkg.com/downshift/-/downshift-1.25.0.tgz#7f6e2dda4aa5ddbb2932401bd61e7b741e92c02e"
 
 duplexer2@^0.1.4:
   version "0.1.4"
@@ -2634,9 +2631,9 @@ flatpickr@2.6.3:
   version "2.6.3"
   resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-2.6.3.tgz#457357532deb135f3da64b425bf4435737961564"
 
-flatpickr@3.0.7:
-  version "3.0.7"
-  resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-3.0.7.tgz#2aa980c0bd83884c0299ee9fba3b7809bea16a29"
+flatpickr@4.2.2:
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-4.2.2.tgz#6f71310c2416a2291ec267bec4f33f321711453f"
 
 flatten@^1.0.2:
   version "1.0.2"
@@ -4038,6 +4035,10 @@ lodash.defaults@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/lodash.defaults/-/lodash.defaults-4.2.0.tgz#d09178716ffea4dde9e5fb7b37f6f0802274580c"
 
+lodash.isequal@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
+
 lodash.memoize@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
@@ -5146,7 +5147,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.5.10, prop-types@^15.5.6, prop-types@^15.6.0:
+prop-types@^15.5.10, prop-types@^15.6.0:
   version "15.6.0"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.0.tgz#ceaf083022fc46b4a35f69e13ef75aed0d639856"
   dependencies:
@@ -5270,12 +5271,6 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-addons-css-transition-group@^15.4.2:
-  version "15.6.2"
-  resolved "https://registry.yarnpkg.com/react-addons-css-transition-group/-/react-addons-css-transition-group-15.6.2.tgz#9e4376bcf40b5217d14ec68553081cee4b08a6d6"
-  dependencies:
-    react-transition-group "^1.2.0"
-
 react-dev-utils@^4.2.1:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-4.2.1.tgz#9f2763e7bafa1a1b9c52254d2a479deec280f111"
@@ -5311,16 +5306,6 @@ react-dom@^16.0.0:
 react-error-overlay@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-3.0.0.tgz#c2bc8f4d91f1375b3dad6d75265d51cd5eeaf655"
-
-react-transition-group@^1.2.0:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-1.2.1.tgz#e11f72b257f921b213229a774df46612346c7ca6"
-  dependencies:
-    chain-function "^1.0.0"
-    dom-helpers "^3.2.0"
-    loose-envify "^1.3.1"
-    prop-types "^15.5.6"
-    warning "^3.0.0"
 
 react@^16.0.0:
   version "16.0.0"

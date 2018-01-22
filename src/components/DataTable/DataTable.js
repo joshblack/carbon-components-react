@@ -5,7 +5,6 @@ import Button from '../Button';
 import Icon from '../Icon';
 import Search from '../Search';
 import { sortRow, toggleSortDirection } from './tools/sorting';
-import wrapComponent from '../../tools/wrapComponent';
 
 // TODO: pre-sorted by column
 export default class DataTable extends React.Component {
@@ -24,6 +23,14 @@ export default class DataTable extends React.Component {
       rows: props.rows.slice(),
       sortDirection: null,
       sortHeader: null,
+      sortHistory: [],
+      sortLookup: props.headers.reduce(
+        (acc, { key, header }) => ({
+          ...acc,
+          [header]: key,
+        }),
+        {}
+      ),
     };
   }
 
@@ -33,34 +40,35 @@ export default class DataTable extends React.Component {
 
   sortBy = header => () =>
     this.setState(state => {
-      const { key } = this.props.headers.find(h => h.header === header);
-      const sortDirection = toggleSortDirection(state.sortDirection);
-      const rows = state.rows.sort(sortRow(key, sortDirection, 'en'));
+      const { rows, sortDirection, sortLookup } = state;
+      const key = sortLookup[header];
 
       return {
-        rows,
-        sortDirection,
+        rows: rows.sort(sortRow(key, sortDirection, 'en')),
+        sortDirection: toggleSortDirection(sortDirection),
         sortHeader: header,
       };
     });
 
   getHeaderProps = ({ header }) => ({
-    isSortHeader: header === this.state.sortHeader,
+    isSortHeader: this.state.sortLookup[header] === this.state.sortHeader,
     key: header,
     onClick: this.sortBy(header),
-    onKeyDown: event => {
-      if (event.keyCode === 32 || event.keyCode === 13) {
-        this.sortBy(header);
-      }
-    },
+    onKeyDown: this.handleOnKeyDown(this.sortBy(header)),
     sortDirection: this.state.sortDirection,
   });
+
+  handleOnKeyDown = handler => event => {
+    if (event.keyCode === 32 || event.keyCode === 13) {
+      handler();
+    }
+  };
 
   render() {
     const { children, render } = this.props;
     const renderProps = {
       rows: this.state.rows,
-      headers: this.props.headers.map(({ header }) => header),
+      headers: this.props.headers,
 
       getHeaderProps: this.getHeaderProps,
     };

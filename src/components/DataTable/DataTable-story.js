@@ -54,14 +54,11 @@ const headers = Object.keys(initialRows[0]).map(key => ({
   header: key.charAt(0).toUpperCase() + key.substring(1),
 }));
 
-console.log(initialRows);
-console.log(headers);
-
 storiesOf('DataTable', module).addWithInfo(
   'Data Table',
   `
-      Data table
-    `,
+    Data table
+  `,
   () => (
     <DataTable
       rows={initialRows}
@@ -77,7 +74,7 @@ storiesOf('DataTable', module).addWithInfo(
         <Table>
           <TableHead>
             <TableRow>
-              {headers.map(header => (
+              {headers.map(({ header }) => (
                 <TableHeader {...getHeaderProps({ header })}>
                   {header}
                 </TableHeader>

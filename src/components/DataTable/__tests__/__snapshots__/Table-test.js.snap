@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Table should render 1`] = `
+<Table>
+  <table
+    className="bx--data-table-v2 bx--data-table-v2--zebra"
+  />
+</Table>
+`;

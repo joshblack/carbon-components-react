@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TableHeader should render 1`] = `
+<th>
+  <button
+    className="bx--table-sort-v2"
+    onClick={[MockFunction]}
+    onKeyDown={[MockFunction]}
+  >
+    <span
+      className="bx--table-header-label"
+    >
+      <div />
+    </span>
+    <Icon
+      className="bx--table-sort-v2__icon"
+      description="Sort arrow"
+      fillRule="evenodd"
+      name="caret--down"
+      role="img"
+    />
+  </button>
+</th>
+`;
+
+exports[`TableHeader should render when it is sorting 1`] = `
+<th>
+  <button
+    className="bx--table-sort-v2 bx--table-sort-v2--active bx--table-sort-v2--ascending"
+    onClick={[MockFunction]}
+    onKeyDown={[MockFunction]}
+  >
+    <span
+      className="bx--table-header-label"
+    >
+      <div />
+    </span>
+    <Icon
+      className="bx--table-sort-v2__icon"
+      description="Sort arrow"
+      fillRule="evenodd"
+      name="caret--down"
+      role="img"
+    />
+  </button>
+</th>
+`;

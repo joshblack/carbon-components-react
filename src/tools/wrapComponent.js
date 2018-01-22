@@ -4,7 +4,13 @@ import cx from 'classnames';
 
 const wrapComponent = ({ name, className, type }) => {
   const Component = props => {
-    return <type {...props} className={cx(className, props.className)} />;
+    const componentClass = cx(className, props.className);
+    return React.createElement(type, {
+      ...props,
+      // Prevent Weird quirk where `cx` will evaluate to an empty string, '',
+      // and so we have empty `class` attributes in the resulting markup
+      className: !!componentClass ? componentClass : undefined,
+    });
   };
   Component.displayName = name;
   Component.propTypes = {

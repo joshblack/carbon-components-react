@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TableContainer should render 1`] = `
+<TableContainer>
+  <div
+    className="bx--data-table-v2-container"
+  />
+</TableContainer>
+`;

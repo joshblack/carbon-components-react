@@ -1,0 +1,507 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DataTable should render 1`] = `
+<DataTable
+  headers={
+    Array [
+      Object {
+        "header": "Name",
+        "key": "name",
+      },
+      Object {
+        "header": "Protocol",
+        "key": "protocol",
+      },
+      Object {
+        "header": "Something",
+        "key": "something",
+      },
+      Object {
+        "header": "Rule",
+        "key": "rule",
+      },
+      Object {
+        "header": "Attached Groups",
+        "key": "attached_groups",
+      },
+      Object {
+        "header": "Status",
+        "key": "status",
+      },
+    ]
+  }
+  locale="en"
+  render={[Function]}
+  rows={
+    Array [
+      Object {
+        "attached_groups": "Kevins VM Groups",
+        "id": "a",
+        "name": "Load Balancer 3",
+        "protocol": "HTTP",
+        "rule": "Round Robin",
+        "something": "80",
+        "status": "Active",
+      },
+      Object {
+        "attached_groups": "Maureens VM Groups",
+        "id": "b",
+        "name": "Load Balancer 1",
+        "protocol": "HTTP",
+        "rule": "Round Robin",
+        "something": "80",
+        "status": "Active",
+      },
+      Object {
+        "attached_groups": "Andrews VM Groups",
+        "id": "c",
+        "name": "Load Balancer 2",
+        "protocol": "HTTP",
+        "rule": "Round Robin",
+        "something": "80",
+        "status": "Active",
+      },
+    ]
+  }
+  sortRows={[Function]}
+>
+  <Table>
+    <table
+      className="bx--data-table-v2 bx--data-table-v2--zebra"
+    >
+      <TableHead>
+        <thead>
+          <TableRow>
+            <tr>
+              <TableHeader
+                isSortHeader={false}
+                key="name"
+                onClick={[Function]}
+                sortDirection="NONE"
+                translateWithId={[Function]}
+              >
+                <th>
+                  <button
+                    className="bx--table-sort-v2"
+                    onClick={[Function]}
+                  >
+                    <span
+                      className="bx--table-header-label"
+                    >
+                      Name
+                    </span>
+                    <Icon
+                      className="bx--table-sort-v2__icon"
+                      description="Sort arrow"
+                      fillRule="evenodd"
+                      name="caret--down"
+                      role="img"
+                    >
+                      <svg
+                        aria-label="Sort arrow"
+                        className="bx--table-sort-v2__icon"
+                        fillRule="evenodd"
+                        height="5"
+                        name="caret--down"
+                        role="img"
+                        viewBox="0 0 10 5"
+                        width="10"
+                      >
+                        <title>
+                          Sort arrow
+                        </title>
+                        <path
+                          d="M10 0L5 5 0 0z"
+                          key="key0"
+                        />
+                      </svg>
+                    </Icon>
+                  </button>
+                </th>
+              </TableHeader>
+              <TableHeader
+                isSortHeader={false}
+                key="protocol"
+                onClick={[Function]}
+                sortDirection="NONE"
+                translateWithId={[Function]}
+              >
+                <th>
+                  <button
+                    className="bx--table-sort-v2"
+                    onClick={[Function]}
+                  >
+                    <span
+                      className="bx--table-header-label"
+                    >
+                      Protocol
+                    </span>
+                    <Icon
+                      className="bx--table-sort-v2__icon"
+                      description="Sort arrow"
+                      fillRule="evenodd"
+                      name="caret--down"
+                      role="img"
+                    >
+                      <svg
+                        aria-label="Sort arrow"
+                        className="bx--table-sort-v2__icon"
+                        fillRule="evenodd"
+                        height="5"
+                        name="caret--down"
+                        role="img"
+                        viewBox="0 0 10 5"
+                        width="10"
+                      >
+                        <title>
+                          Sort arrow
+                        </title>
+                        <path
+                          d="M10 0L5 5 0 0z"
+                          key="key0"
+                        />
+                      </svg>
+                    </Icon>
+                  </button>
+                </th>
+              </TableHeader>
+              <TableHeader
+                isSortHeader={false}
+                key="something"
+                onClick={[Function]}
+                sortDirection="NONE"
+                translateWithId={[Function]}
+              >
+                <th>
+                  <button
+                    className="bx--table-sort-v2"
+                    onClick={[Function]}
+                  >
+                    <span
+                      className="bx--table-header-label"
+                    >
+                      Something
+                    </span>
+                    <Icon
+                      className="bx--table-sort-v2__icon"
+                      description="Sort arrow"
+                      fillRule="evenodd"
+                      name="caret--down"
+                      role="img"
+                    >
+                      <svg
+                        aria-label="Sort arrow"
+                        className="bx--table-sort-v2__icon"
+                        fillRule="evenodd"
+                        height="5"
+                        name="caret--down"
+                        role="img"
+                        viewBox="0 0 10 5"
+                        width="10"
+                      >
+                        <title>
+                          Sort arrow
+                        </title>
+                        <path
+                          d="M10 0L5 5 0 0z"
+                          key="key0"
+                        />
+                      </svg>
+                    </Icon>
+                  </button>
+                </th>
+              </TableHeader>
+              <TableHeader
+                isSortHeader={false}
+                key="rule"
+                onClick={[Function]}
+                sortDirection="NONE"
+                translateWithId={[Function]}
+              >
+                <th>
+                  <button
+                    className="bx--table-sort-v2"
+                    onClick={[Function]}
+                  >
+                    <span
+                      className="bx--table-header-label"
+                    >
+                      Rule
+                    </span>
+                    <Icon
+                      className="bx--table-sort-v2__icon"
+                      description="Sort arrow"
+                      fillRule="evenodd"
+                      name="caret--down"
+                      role="img"
+                    >
+                      <svg
+                        aria-label="Sort arrow"
+                        className="bx--table-sort-v2__icon"
+                        fillRule="evenodd"
+                        height="5"
+                        name="caret--down"
+                        role="img"
+                        viewBox="0 0 10 5"
+                        width="10"
+                      >
+                        <title>
+                          Sort arrow
+                        </title>
+                        <path
+                          d="M10 0L5 5 0 0z"
+                          key="key0"
+                        />
+                      </svg>
+                    </Icon>
+                  </button>
+                </th>
+              </TableHeader>
+              <TableHeader
+                isSortHeader={false}
+                key="attached_groups"
+                onClick={[Function]}
+                sortDirection="NONE"
+                translateWithId={[Function]}
+              >
+                <th>
+                  <button
+                    className="bx--table-sort-v2"
+                    onClick={[Function]}
+                  >
+                    <span
+                      className="bx--table-header-label"
+                    >
+                      Attached Groups
+                    </span>
+                    <Icon
+                      className="bx--table-sort-v2__icon"
+                      description="Sort arrow"
+                      fillRule="evenodd"
+                      name="caret--down"
+                      role="img"
+                    >
+                      <svg
+                        aria-label="Sort arrow"
+                        className="bx--table-sort-v2__icon"
+                        fillRule="evenodd"
+                        height="5"
+                        name="caret--down"
+                        role="img"
+                        viewBox="0 0 10 5"
+                        width="10"
+                      >
+                        <title>
+                          Sort arrow
+                        </title>
+                        <path
+                          d="M10 0L5 5 0 0z"
+                          key="key0"
+                        />
+                      </svg>
+                    </Icon>
+                  </button>
+                </th>
+              </TableHeader>
+              <TableHeader
+                isSortHeader={false}
+                key="status"
+                onClick={[Function]}
+                sortDirection="NONE"
+                translateWithId={[Function]}
+              >
+                <th>
+                  <button
+                    className="bx--table-sort-v2"
+                    onClick={[Function]}
+                  >
+                    <span
+                      className="bx--table-header-label"
+                    >
+                      Status
+                    </span>
+                    <Icon
+                      className="bx--table-sort-v2__icon"
+                      description="Sort arrow"
+                      fillRule="evenodd"
+                      name="caret--down"
+                      role="img"
+                    >
+                      <svg
+                        aria-label="Sort arrow"
+                        className="bx--table-sort-v2__icon"
+                        fillRule="evenodd"
+                        height="5"
+                        name="caret--down"
+                        role="img"
+                        viewBox="0 0 10 5"
+                        width="10"
+                      >
+                        <title>
+                          Sort arrow
+                        </title>
+                        <path
+                          d="M10 0L5 5 0 0z"
+                          key="key0"
+                        />
+                      </svg>
+                    </Icon>
+                  </button>
+                </th>
+              </TableHeader>
+            </tr>
+          </TableRow>
+        </thead>
+      </TableHead>
+      <TableBody>
+        <tbody>
+          <TableRow
+            key="a"
+          >
+            <tr>
+              <TableCell
+                key="a:name"
+              >
+                <td>
+                  Load Balancer 3
+                </td>
+              </TableCell>
+              <TableCell
+                key="a:protocol"
+              >
+                <td>
+                  HTTP
+                </td>
+              </TableCell>
+              <TableCell
+                key="a:something"
+              >
+                <td>
+                  80
+                </td>
+              </TableCell>
+              <TableCell
+                key="a:rule"
+              >
+                <td>
+                  Round Robin
+                </td>
+              </TableCell>
+              <TableCell
+                key="a:attached_groups"
+              >
+                <td>
+                  Kevins VM Groups
+                </td>
+              </TableCell>
+              <TableCell
+                key="a:status"
+              >
+                <td>
+                  Active
+                </td>
+              </TableCell>
+            </tr>
+          </TableRow>
+          <TableRow
+            key="b"
+          >
+            <tr>
+              <TableCell
+                key="b:name"
+              >
+                <td>
+                  Load Balancer 1
+                </td>
+              </TableCell>
+              <TableCell
+                key="b:protocol"
+              >
+                <td>
+                  HTTP
+                </td>
+              </TableCell>
+              <TableCell
+                key="b:something"
+              >
+                <td>
+                  80
+                </td>
+              </TableCell>
+              <TableCell
+                key="b:rule"
+              >
+                <td>
+                  Round Robin
+                </td>
+              </TableCell>
+              <TableCell
+                key="b:attached_groups"
+              >
+                <td>
+                  Maureens VM Groups
+                </td>
+              </TableCell>
+              <TableCell
+                key="b:status"
+              >
+                <td>
+                  Active
+                </td>
+              </TableCell>
+            </tr>
+          </TableRow>
+          <TableRow
+            key="c"
+          >
+            <tr>
+              <TableCell
+                key="c:name"
+              >
+                <td>
+                  Load Balancer 2
+                </td>
+              </TableCell>
+              <TableCell
+                key="c:protocol"
+              >
+                <td>
+                  HTTP
+                </td>
+              </TableCell>
+              <TableCell
+                key="c:something"
+              >
+                <td>
+                  80
+                </td>
+              </TableCell>
+              <TableCell
+                key="c:rule"
+              >
+                <td>
+                  Round Robin
+                </td>
+              </TableCell>
+              <TableCell
+                key="c:attached_groups"
+              >
+                <td>
+                  Andrews VM Groups
+                </td>
+              </TableCell>
+              <TableCell
+                key="c:status"
+              >
+                <td>
+                  Active
+                </td>
+              </TableCell>
+            </tr>
+          </TableRow>
+        </tbody>
+      </TableBody>
+    </table>
+  </Table>
+</DataTable>
+`;

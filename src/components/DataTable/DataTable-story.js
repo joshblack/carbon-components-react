@@ -22,8 +22,11 @@ const paginationProps = {
   pageSizes: [10, 20, 30, 40, 50],
 };
 
+const rows = [[{ name: 'Load Bala' }]];
+
 const initialRows = [
   {
+    id: 'a',
     name: 'Load Balancer 3',
     protocol: 'HTTP',
     something: '80',
@@ -32,6 +35,7 @@ const initialRows = [
     status: 'Active',
   },
   {
+    id: 'b',
     name: 'Load Balancer 1',
     protocol: 'HTTP',
     something: '80',
@@ -40,6 +44,7 @@ const initialRows = [
     status: 'Active',
   },
   {
+    id: 'c',
     name: 'Load Balancer 2',
     protocol: 'HTTP',
     something: '80',
@@ -49,10 +54,38 @@ const initialRows = [
   },
 ];
 
-const headers = Object.keys(initialRows[0]).map(key => ({
-  key,
-  header: key.charAt(0).toUpperCase() + key.substring(1),
-}));
+const headers = [
+  {
+    key: 'name',
+    header: 'Name',
+    isSortable: true,
+  },
+  {
+    key: 'protocol',
+    header: 'Protocol',
+    isSortable: true,
+  },
+  {
+    key: 'something',
+    header: 'Something',
+    isSortable: false,
+  },
+  {
+    key: 'rule',
+    header: 'Rule',
+    isSortable: false,
+  },
+  {
+    key: 'attached_groups',
+    header: 'Attached Groups',
+    isSortable: true,
+  },
+  {
+    key: 'status',
+    header: 'Status',
+    isSortable: true,
+  },
+];
 
 storiesOf('DataTable', module).addWithInfo(
   'Data Table',
@@ -63,29 +96,22 @@ storiesOf('DataTable', module).addWithInfo(
     <DataTable
       rows={initialRows}
       headers={headers}
-      render={({
-        rows,
-        headers,
-
-        getHeaderProps,
-        getRowProps,
-        getCellProps,
-      }) => (
+      render={({ rows, headers, getHeaderProps }) => (
         <Table>
           <TableHead>
             <TableRow>
-              {headers.map(({ header }) => (
+              {headers.map(header => (
                 <TableHeader {...getHeaderProps({ header })}>
-                  {header}
+                  {header.header}
                 </TableHeader>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row, i) => (
-              <TableRow key={i}>
-                {Object.keys(row).map(key => (
-                  <TableCell key={key}>{row[key]}</TableCell>
+            {rows.map(row => (
+              <TableRow key={row.id}>
+                {row.cells.map(cell => (
+                  <TableCell key={cell.id}>{cell.value}</TableCell>
                 ))}
               </TableRow>
             ))}
@@ -94,6 +120,41 @@ storiesOf('DataTable', module).addWithInfo(
       )}
     />
   )
+  // () => (
+  // <DataTable
+  // rows={initialRows}
+  // headers={headers}
+  // render={({
+  // rows,
+  // headers,
+
+  // getHeaderProps,
+  // getRowProps,
+  // getCellProps,
+  // }) => (
+  // <Table>
+  // <TableHead>
+  // <TableRow>
+  // {headers.map(({ header }) => (
+  // <TableHeader {...getHeaderProps({ header })}>
+  // {header}
+  // </TableHeader>
+  // ))}
+  // </TableRow>
+  // </TableHead>
+  // <TableBody>
+  // {rows.map((row, i) => (
+  // <TableRow key={i}>
+  // {Object.keys(row).map(key => (
+  // <TableCell key={key}>{row[key]}</TableCell>
+  // ))}
+  // </TableRow>
+  // ))}
+  // </TableBody>
+  // </Table>
+  // )}
+  // />
+  // )
 );
 // .addWithInfo(
 // 'Expandable table',

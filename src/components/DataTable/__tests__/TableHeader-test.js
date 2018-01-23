@@ -30,7 +30,7 @@ describe('TableHeader', () => {
   it('should support translations', () => {
     expect(TableHeader.translationKeys).toBeDefined();
     const mockTranslateWithId = jest.fn(() => 'hi');
-    const wrapper = shallow(
+    shallow(
       <TableHeader {...mockProps} translateWithId={mockTranslateWithId} />
     );
     expect(mockTranslateWithId).toHaveBeenCalled();

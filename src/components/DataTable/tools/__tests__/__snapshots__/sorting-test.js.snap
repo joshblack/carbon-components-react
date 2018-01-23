@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`sorting tools #defaultSortRows should sort the given rows 1`] = `
+Array [
+  "c",
+  "b",
+  "a",
+]
+`;
+
+exports[`sorting tools #defaultSortRows should sort the given rows 2`] = `
+Array [
+  "c",
+  "b",
+  "a",
+]
+`;
+
+exports[`sorting tools should export an object of sorting states 1`] = `
+Object {
+  "ASC": "ASC",
+  "DESC": "DESC",
+  "NONE": "NONE",
+}
+`;

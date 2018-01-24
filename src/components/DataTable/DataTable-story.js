@@ -58,40 +58,34 @@ const headers = [
   {
     key: 'name',
     header: 'Name',
-    isSortable: true,
   },
   {
     key: 'protocol',
     header: 'Protocol',
-    isSortable: true,
   },
   {
     key: 'something',
     header: 'Something',
-    isSortable: false,
   },
   {
     key: 'rule',
     header: 'Rule',
-    isSortable: false,
   },
   {
     key: 'attached_groups',
     header: 'Attached Groups',
-    isSortable: true,
   },
   {
     key: 'status',
     header: 'Status',
-    isSortable: true,
   },
 ];
 
 storiesOf('DataTable', module).addWithInfo(
-  'Data Table',
+  'default',
   `
-    Data table
-  `,
+      Data table
+    `,
   () => (
     <DataTable
       rows={initialRows}
@@ -120,46 +114,100 @@ storiesOf('DataTable', module).addWithInfo(
       )}
     />
   )
-  // () => (
-  // <DataTable
-  // rows={initialRows}
-  // headers={headers}
-  // render={({
-  // rows,
-  // headers,
-
-  // getHeaderProps,
-  // getRowProps,
-  // getCellProps,
-  // }) => (
-  // <Table>
-  // <TableHead>
-  // <TableRow>
-  // {headers.map(({ header }) => (
-  // <TableHeader {...getHeaderProps({ header })}>
-  // {header}
-  // </TableHeader>
-  // ))}
-  // </TableRow>
-  // </TableHead>
-  // <TableBody>
-  // {rows.map((row, i) => (
-  // <TableRow key={i}>
-  // {Object.keys(row).map(key => (
-  // <TableCell key={key}>{row[key]}</TableCell>
-  // ))}
-  // </TableRow>
-  // ))}
-  // </TableBody>
-  // </Table>
-  // )}
-  // />
-  // )
 );
 // .addWithInfo(
-// 'Expandable table',
+// 'selectable',
 // `
-// Expandable table
+// Selectable Table
 // `,
-// () => <ExpandableDataTable />
+// () => (
+// <DataTable
+// rows={initialRows}
+// headers={headers}
+// isSelectable={true}
+// render={({
+// rows,
+// headers,
+// getHeaderProps,
+// getRowProps,
+// getCellProps,
+// }) => (
+// <Table>
+// <TableHead>
+// <TableRow>
+// {headers.map(header => (
+// <TableHeader {...getHeaderProps({ header })}>
+// {header.header}
+// </TableHeader>
+// ))}
+// </TableRow>
+// </TableHead>
+// <TableBody>
+// {rows.map(row => (
+// <TableRow {...getRowProps({ row })}>
+// {row.cells.map(cell => (
+// <TableCell {...getCellProps({ cell })}>
+// {cell.value}
+// </TableCell>
+// ))}
+// </TableRow>
+// ))}
+// </TableBody>
+// </Table>
+// )}
+// />
+// )
+// )
+// .addWithInfo(
+// 'expandable',
+// `
+// Expandable Table
+// `,
+// () => (
+// <DataTable
+// rows={initialRows}
+// headers={headers}
+// isExpandable
+// render={({
+// rows,
+// headers,
+// getHeaderProps,
+// getRowProps,
+// getCellProps,
+// }) => (
+// <Table>
+// <TableHead>
+// <TableRow>
+// {headers.map(header => (
+// <TableHeader {...getHeaderProps({ header })}>
+// {header.header}
+// </TableHeader>
+// ))}
+// </TableRow>
+// </TableHead>
+// <TableBody>
+// {rows.map(row => (
+// <React.Fragment key={row.id}>
+// <TableRow {...getRowProps({ row, isExpandable: true })}>
+// {row.cells.map(cell => (
+// <TableCell {...getCellProps({ cell })}>
+// {cell.value}
+// </TableCell>
+// ))}
+// </TableRow>
+// <TableRow {...getRowProps({ row, isExpandedRow: true })}>
+// <TableCell colSpan={headers.length}>
+// <div>
+// <h1>Expandable Row Content</h1>
+// <p>Description here.</p>
+// </div>
+// </TableCell>
+// </TableRow>
+// </React.Fragment>
+// ))}
+// </TableBody>
+// </Table>
+// )}
+// />
+// )
 // );

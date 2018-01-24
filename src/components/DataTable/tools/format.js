@@ -2,7 +2,7 @@ import { getCellId } from './';
 
 // `normalize` is a helper to generate flat objects from a nested
 // multi-dimensional array
-export const normalize = (rows, headers) => {
+export const normalize = (rows, headers, isSelectable) => {
   const rowIds = new Array(rows.length);
   const rowsById = {};
   const cellsById = {};
@@ -13,7 +13,7 @@ export const normalize = (rows, headers) => {
     // expansion
     rowsById[row.id] = {
       id: row.id,
-      isSelectable: null,
+      isSelectable,
       isSelected: false,
       isExpandable: null,
       isExpanded: false,

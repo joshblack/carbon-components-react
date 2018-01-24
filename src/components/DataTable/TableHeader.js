@@ -14,10 +14,15 @@ const TableHeader = ({
   children,
   onClick,
   isSortHeader,
+  shouldUseElement,
   sortDirection,
   translateWithId: t,
   ...rest
 }) => {
+  if (shouldUseElement) {
+    return <th {...rest}>{children}</th>;
+  }
+
   const className = cx({
     'bx--table-sort-v2': true,
     'bx--table-sort-v2--active':
@@ -41,10 +46,10 @@ const TableHeader = ({
 
 TableHeader.propTypes = {
   children: PropTypes.node,
-  onClick: PropTypes.func.isRequired,
-  isSortHeader: PropTypes.bool.isRequired,
+  onClick: PropTypes.func,
+  isSortHeader: PropTypes.bool,
   sortDirection: PropTypes.oneOf(['ASC', 'DESC', 'NONE']),
-  translateWithId: PropTypes.func.isRequired,
+  translateWithId: PropTypes.func,
 };
 
 TableHeader.defaultProps = {

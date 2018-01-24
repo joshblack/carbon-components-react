@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import Checkbox from '../Checkbox';
 import { composeEventHandlers } from './tools';
 import { denormalize, normalize } from './tools/format';
 import {
@@ -8,6 +9,7 @@ import {
   defaultSortRows,
   sortStates,
 } from './tools/sorting';
+import InlineCheckbox from '../InlineCheckbox';
 
 /**
  * Data Tables are used to represent a collection of resources, displaying a
@@ -44,7 +46,6 @@ export default class DataTable extends React.Component {
       PropTypes.shape({
         key: PropTypes.string.isRequired,
         header: PropTypes.string.isRequired,
-        isSortable: PropTypes.bool,
       })
     ).isRequired,
 
@@ -72,11 +73,23 @@ export default class DataTable extends React.Component {
      * Provide a string for the current locale
      */
     locale: PropTypes.string,
+
+    /**
+     * Specify whether row-level selection is available
+     */
+    isSelectable: PropTypes.bool,
+
+    /**
+     * Specify whether row-level expansion is available
+     */
+    isExpandable: PropTypes.bool,
   };
 
   static defaultProps = {
     sortRows: defaultSortRows,
     locale: 'en',
+    isSelectable: false,
+    isExpandable: false,
   };
 
   constructor(props) {
@@ -84,15 +97,20 @@ export default class DataTable extends React.Component {
 
     const { rowIds, rowsById, cellsById } = normalize(
       props.rows,
-      props.headers
+      props.headers,
+      props.isSelectable
     );
     this.state = {
       rowIds,
       rowsById,
       cellsById,
 
+      // Sorting
       sortDirection: initialSortState,
       sortHeader: null,
+
+      // InlineCheckbox
+      selectedRows: [],
 
       // Copy over rowIds so the reference doesn't mutate the stored
       // `initialRowOrder`
@@ -103,7 +121,8 @@ export default class DataTable extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { rowIds, rowsById, cellsById } = normalize(
       nextProps.rows,
-      nextProps.headers
+      nextProps.headers,
+      nextProps.isSelectable
     );
     this.setState({
       rowIds,
@@ -116,6 +135,23 @@ export default class DataTable extends React.Component {
   }
 
   getHeaderProps = ({ header, onClick, ...rest }) => {
+    if (header.isSelectionHeader) {
+      return {
+        ...rest,
+        key: '__data-table_selection__',
+        shouldUseElement: true,
+        onClick,
+      };
+    }
+
+    if (header.isExpansionHeader) {
+      return {
+        ...rest,
+        key: '__data-table_expansion__',
+        shouldUseElement: true,
+      };
+    }
+
     const { key } = header;
     const { sortDirection, sortHeader } = this.state;
     return {
@@ -128,6 +164,60 @@ export default class DataTable extends React.Component {
       onClick: composeEventHandlers([this.handleSortBy(key), onClick]),
     };
   };
+
+  getRowProps = ({ row, isExpandedRow, isExpandable, ...rest }) => {
+    if (isExpandable) {
+      return {
+        key: row.id,
+        isSelectable: false,
+        isExpanded: row.isExpanded,
+        isExpandable: true,
+        onExpand: this.handleOnExpand(row.id),
+      };
+    }
+
+    if (isExpandedRow) {
+      return {
+        key: `${row.id}-expanded`,
+        isExpanded: row.isExpanded,
+      };
+    }
+
+    return {
+      key: row.id,
+      isSelected: row.isSelected,
+      isSelectable: row.isSelectable,
+      onSelection: this.handleOnSelect(row.id),
+    };
+  };
+
+  getCellProps = ({ cell, ...rest }) => ({
+    key: cell.id,
+    ...rest,
+  });
+
+  getSelectableHeader = () => {
+    const { selectedRows, rowIds } = this.state;
+    const isChecked = this.getSelectedRows().length === rowIds.length;
+    return {
+      isInlineCheckboxHeader: true,
+      header: (
+        <InlineCheckbox
+          id="data-table_select-all"
+          name="select-all"
+          onClick={this.handleSelectAll}
+          checked={isChecked}
+        />
+      ),
+    };
+  };
+
+  getSelectedRows = () =>
+    Object.keys(this.state.rowsById).filter(
+      key =>
+        this.state.rowsById[key].isSelectable &&
+        this.state.rowsById[key].isSelected
+    );
 
   handleSortBy = key => () => {
     this.setState(state => {
@@ -158,20 +248,80 @@ export default class DataTable extends React.Component {
     });
   };
 
-  getRowProps = ({ row }) => ({
-    key: row.id,
-  });
+  handleSelectAll = () => {
+    const { rowIds } = this.state;
+    const isSelected = this.getSelectedRows().length !== rowIds.length;
 
-  getCellProps = ({ cell }) => ({
-    key: cell.id,
-  });
+    this.setState(state => ({
+      rowsById: Object.keys(state.rowsById).reduce(
+        (acc, key) => ({
+          ...acc,
+          [key]: {
+            ...state.rowsById[key],
+            isSelected,
+          },
+        }),
+        {}
+      ),
+    }));
+  };
+
+  handleOnSelect = rowId => () => {
+    this.setState(state => {
+      const { rowsById } = state;
+      const row = rowsById[rowId];
+      return {
+        rowsById: {
+          ...rowsById,
+          [rowId]: {
+            ...row,
+            isSelected: row.isSelectable && !row.isSelected,
+          },
+        },
+      };
+    });
+  };
+
+  handleOnExpand = id => () => {
+    this.setState(state => {
+      const { rowsById } = state;
+      const row = rowsById[id];
+      console.log(row);
+      return {
+        rowsById: {
+          ...rowsById,
+          [id]: {
+            ...row,
+            isExpanded: !row.isExpanded,
+          },
+        },
+      };
+    });
+  };
+
+  getHeaders = () => {
+    const { headers, isSelectable, isExpandable } = this.props;
+    if (isSelectable) {
+      return [this.getSelectableHeader(), ...this.props.headers];
+    }
+    if (isExpandable) {
+      return [
+        {
+          isExpansionHeader: true,
+          header: '',
+        },
+        ...this.props.headers,
+      ];
+    }
+    return headers;
+  };
 
   render() {
-    const { children, render } = this.props;
+    const { children, render, isSelectable } = this.props;
     const { rowIds, rowsById, cellsById } = this.state;
     const renderProps = {
       rows: denormalize(rowIds, rowsById, cellsById),
-      headers: this.props.headers,
+      headers: this.getHeaders(),
       getHeaderProps: this.getHeaderProps,
       getRowProps: this.getRowProps,
       getCellProps: this.getCellProps,
